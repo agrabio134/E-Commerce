@@ -1,0 +1,13 @@
+- [ ] Set up a development environment for the project, including a web server, PHP, and MySQL.
+- [x] Design the database schema for the project, including any necessary tables and relationships.
+- [ ] Set up user authentication and authorization for the web application.
+- [x] Create CustomerControllers for the web application
+- [x] Create OrderController for the web application
+- [x] Create ProductController for the web application
+- [x] Create CRUD controllers for the web application
+- [ ] Implement the product catalog and shopping cart functionality.
+- [ ] Implement the checkout process, including the ability to process payments.
+- [ ] Implement any necessary features such as search, filtering, and reviews.
+- [ ] Test the application thoroughly to ensure it is bug-free and secure.
+- [ ] Deploy the application to a live web server.
+- [ ] Set up monitoring and maintenance procedures to ensure the smooth operation of the website.
