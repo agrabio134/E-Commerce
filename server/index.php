@@ -5,6 +5,9 @@ require_once 'config/database.php';
 
 //CustomerController file
 require_once 'controllers/CustomerController.php';
+require_once 'controllers/ProductController.php';
+
+require_once 'Router/Router.php';
 
 //  request URI to determine the controller and action
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -23,6 +26,40 @@ if ($uri[1] == "products") {
   $controller = "CustomerController";
   $action = $uri[2];
 }
+//  elseif ($uri[1] == "cart") {
+//   $controller = "ProductController";
+//   $action = $uri[2];
+// }
+
+
+
+// $router = new Router();
+$productController = new ProductController();
+
+// $router = new Router;
+
+$router->post('/products/cart', function() use ($productController) {
+  $productController->addToCart();
+});
+
+$router->post('/products/update-cart', function() use ($productController) {
+  $productController->updateCart();
+});
+
+
+$router->post('/products/update-quantity', function() use ($productController) {
+  $productController->updateQuantity();
+});
+
+
+$router->post('/update-total-price', function() use ($productController) {
+  $productController->updateTotalPrice();
+});
+
+
+
+
+
 
 // Check if the controller and action exist, and kung meron, create a new instance of the controller and call the action
 if (file_exists('controllers/' . $controller . '.php')) {
