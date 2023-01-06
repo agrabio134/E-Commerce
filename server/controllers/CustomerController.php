@@ -195,7 +195,7 @@ class CustomerController
       $_SESSION['id'] = $customer['id'];
       $_SESSION['customer_name'] = $customer['customer_name'];
       // echo 'Success: You are now logged in';
-      header('Location: /customers/index');
+      header('Location: /products/index');
       return true;
     } else {
       echo 'Error: Invalid email address or password';

@@ -1,5 +1,8 @@
 <h1>Products</h1>
 
+<a href="/products/cart">View Cart <span class="badge"></span></a>
+
+
 <table>
     <tr>
         <th>ID</th>

@@ -9,6 +9,8 @@
   }
 
   echo 'Welcome ' . $_SESSION['customer_name'];
+  // echo 'Welcome ' . $_SESSION['email'];
+  // echo 'Welcome ' . $_SESSION['id'];
 ?>
 
 <h1>Customers</h1>

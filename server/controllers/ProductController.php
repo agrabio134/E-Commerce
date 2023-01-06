@@ -41,7 +41,9 @@ class ProductController
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $product_id = $_POST['id'];
+
+        $product_id = $_POST['prod_id'];
+
 
         if (isset($_POST['quantity'])) {
             // The form submission is for adding to the cart
@@ -62,15 +64,79 @@ class ProductController
                 $_SESSION['cart'][$product_id] = $quantity;
             }
         }
+        // insert to database
+        $customer_id = $_SESSION['id'];
+
+        //if data is not present, insert data into database else update the data
+        $stmt = $this->conn->prepare('SELECT * FROM cart WHERE customers_id = ? AND product_id = ?');
+        $stmt->execute([$customer_id, $product_id]);
+        $cart = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$cart) {
+            // To insert a new row
+            $stmt = $this->conn->prepare('INSERT INTO cart (customers_id, product_id, quantity) VALUES (?, ?, ?)');
+            $stmt->execute([$customer_id, $product_id, $quantity]);
+        } else {
+            // To update an existing row
+
+            //not really update but it should add the current quantity to the existing quantity
+            $quantity = $cart['quantity'] + $quantity;
+
+            $stmt = $this->conn->prepare('UPDATE cart SET quantity = ? WHERE customers_id = ? AND product_id = ?');
+            $stmt->execute([$quantity, $customer_id, $product_id]);
+        }
+
+
+     
+
+    }
+
+    public function update_cart()
+    {
+        session_start();
+        if (isset($_SESSION['id'])) {
+            // The user is logged in, so save the cart to the 'cart' table in the database
+            $customer_id = $_SESSION['id'];
+
+            $product_id = $_POST['product_id'];
+            $quantity = $_POST[$product_id . '_quantity'];
+
+            $qty = $quantity;
+
+
+            $stmt = $this->conn->prepare('UPDATE cart SET quantity = ? WHERE customers_id = ? AND product_id = ?');
+            $stmt->execute([$qty, $customer_id, $product_id]);
+
+
+            header('Location: /products/cart');
+        } else {
+            header('Location: /customers/login');
+        }
+
+        echo "<br>";
+        echo "cust id " . $customer_id;
+        echo "<br>";
+        echo "prod id " . $product_id;
     }
 
 
 
     public function cart()
     {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['id'])) {
+            header('Location: /customers/login');
+            exit;
+        }
+
+        echo 'Welcome ' . $_SESSION['customer_name'];
 
         $products = [];
         $total = 0;
+        $customer_id = $_SESSION['id'];
+
 
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
@@ -81,46 +147,95 @@ class ProductController
             $stmt = $this->conn->prepare('SELECT * FROM products WHERE id = ?');
             $stmt->execute([$id]);
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
-          
+
             $product['quantity'] = $quantity;
+
 
             $products[] = $product;
             // echo  $quantity;
 
             $productPrices = array();
 
-            foreach ($products as $product) {
-                $productPrices[] = $product['prod_price'] * $product['quantity'];
-              }
+            //select data from table cart and table product to get the total price
+            $stmt = $this->conn->prepare(
+                'SELECT c.id, c.customers_id, c.product_id, c.quantity, p.prod_name, p.prod_price
+             FROM cart c
+             INNER JOIN products p ON c.product_id = p.id
+             WHERE c.customers_id = ?'
+            );
+            $stmt->execute([$customer_id]);
+            $cart = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-              $total = array_sum($productPrices);
+            foreach ($cart as $product) {
+                $productPrices[] = $product['quantity'] * $product['prod_price'];
+            }
 
-            //   echo 'Total: $' . $totalPrice;
-
-
-
-
-
-           
-
-            // $totalQuantity = 0;
-            // foreach ($products as $product) {
-            //     $totalQuantity += $product['quantity'];
-            // }
-            // // echo $totalQuantity;
-            // // // echo $quantity;
-            // // echo "<br>";
-
-            // $total = $product['prod_price'] * $totalQuantity;
-            // echo $total;
-            // echo "<br>";
-            // echo var_dump($total);
-            // echo $product['quantity'];
+            $total = array_sum($productPrices);
         }
+
+
+
+        $stmt = $this->conn->prepare(
+            'SELECT c.id, c.customers_id, c.product_id, c.quantity, p.prod_name, p.prod_price
+             FROM cart c
+             INNER JOIN products p ON c.product_id = p.id
+             WHERE c.customers_id = ?'
+        );
+        $stmt->execute([$customer_id]);
+        $cart = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute([$customer_id]);
+        // $cart = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 
         // Render the cart view
         require 'views/products/cart.php';
     }
+    public function checkout()
+    {
+        // Get the current user's cart from the database
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['id'])) {
+            header('Location: /customers/login');
+            exit;
+        }
+
+        $customer_id = $_SESSION['id'];
+
+        $stmt = $this->conn->prepare(
+            'SELECT c.id, c.customers_id, c.product_id, c.quantity, p.prod_name, p.prod_price
+             FROM cart c
+             INNER JOIN products p ON c.product_id = p.id
+             WHERE c.customers_id = ?'
+        );
+        $stmt->execute([$customer_id]);
+        $cart = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Get the customer details from the database
+        $stmt = $this->conn->prepare('SELECT * FROM customers WHERE id = ?');
+        $stmt->execute([$customer_id]);
+        $customer = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //get total price
+        $productPrices = array();
+        foreach ($cart as $product) {
+            $productPrices[] = $product['quantity'] * $product['prod_price'];
+        }
+        $total = array_sum($productPrices);
+
+      
+
+        // Render the checkout view
+
+        // require 'views/products/checkout.php';
+        require 'views/checkout/checkout.php';
+    }
+
+
+
+
 
 
 

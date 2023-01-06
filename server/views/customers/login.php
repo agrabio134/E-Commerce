@@ -1,7 +1,7 @@
 <?php
   // Check if the user is already logged in
   if (isset($_SESSION['customer_id'])) {
-    header('Location: index.php');
+    header('Location: ./products/index.php');
     exit;
   }
 ?>

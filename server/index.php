@@ -42,19 +42,23 @@ $router->post('/products/cart', function() use ($productController) {
   $productController->addToCart();
 });
 
-$router->post('/products/update-cart', function() use ($productController) {
-  $productController->updateCart();
+// $router->post('/products/update-cart', function() use ($productController) {
+//   $productController->updateCart();
+// });
+
+
+// $router->post('/products/update-quantity', function() use ($productController) {
+//   $productController->updateQuantity();
+// });
+
+$router->get('/checkout', function() {
+  require __DIR__ . '/../views/checkout.php';
 });
 
 
-$router->post('/products/update-quantity', function() use ($productController) {
-  $productController->updateQuantity();
-});
-
-
-$router->post('/update-total-price', function() use ($productController) {
-  $productController->updateTotalPrice();
-});
+// $router->post('/update-total-price', function() use ($productController) {
+//   $productController->updateTotalPrice();
+// });
 
 
 
