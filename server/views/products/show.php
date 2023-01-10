@@ -18,7 +18,7 @@ if (!isset($_SESSION['id'])){
 
 <img src="../../controllers/uploads/<?php echo $product['prod_image']; ?>" alt="<?php echo $product['prod_image']; ?>">
 
-<p>Php <?php echo $product['prod_price']; ?></p>
+<p>&#8369; <?php echo $product['prod_price']; ?></p>
 
 <p><?php echo $product['prod_description']; ?></p>
 

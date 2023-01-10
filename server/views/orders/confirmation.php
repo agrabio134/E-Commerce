@@ -1,5 +1,17 @@
-<h1>Order Confirmation</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Order Confirmation</title>
+  <link rel="stylesheet" href="../../public/css/confirm-order.css">
+  
 
+<body>
+<div class="confirmation-main">
+<h1 class="order-confirmation-title">Order Confirmation</h1>
+<div class="confirmation-content">
 <p>Thank you for your order! Your order reference number is <strong><?php 
 // Get the order ID
 $stmt = $this->conn->prepare('SELECT unique_id FROM orders WHERE customer_id = ? ORDER BY id DESC LIMIT 1');
@@ -9,28 +21,39 @@ echo $unique_id;
 ?></strong>.</p>
 
 <h2>Order Details</h2>
+  
+<p class="payment-method">Payment Method: <?php echo $payments['payment_method']; ?></p> 
+
 
 <table>
   <tr>
     <th>Product</th>
     <th>Quantity</th>
-    <th>Price</th>
+    <th>Price</th> 
   </tr>
   <?php foreach ($order_items as $item) : ?>
+    <?php if ($item['quantity'] > 0): ?>
+
     <tr>
       <td><?php echo $item['prod_name']; ?></td>
       <td><?php echo $item['quantity']; ?></td>
-      <td>$<?php echo $item['price']; ?></td>
-    </tr>
+      <td>&#8369;<?php echo $item['price']; ?></td>
+      </tr>
+    <?php endif; ?>
   <?php endforeach; ?>
   <tr>
-    <td colspan="2">Shipping:</td>
-    <td>$<?php echo $shipping_price; ?></td>
-  </tr>
-  <tr>
-    <td colspan="2">Total:</td>
-    <td>$<?php echo $total_price; ?></td>
-  </tr>
+  
+  <td colspan="2">Shipping Fee:</td>
+  <td>&#8369;<?php echo $shipping_price; ?></td>
+  
+    </tr>
+
+    <tr>
+  
+  <td colspan="2"><h3>Total: </h3></td>
+  <td><h3>&#8369;<?php echo $total_price; ?></h3></td>
+  
+    </tr>
 </table>
 
 <p>Your order will be shipped to the following address:</p>
@@ -50,3 +73,7 @@ echo $unique_id;
   <?php echo $customer_address; ?><br>
 
 </address>
+</div>
+</div>
+
+</body>

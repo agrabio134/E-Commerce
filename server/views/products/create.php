@@ -9,6 +9,14 @@
   <label for="price">Price:</label><br>
   <input type="number" id="price" name="price"><br>
   <br>
+  <label for="category_id">category:</label><br>
+  <select id="category_id" name="category_id">
+    <option value="2">Men's Clothing</option>
+    <option value="3">Women's Clothing</option>
+    <option value="5">Men's Accessories</option>
+    <option value="6">Women's Accessories</option>
+  </select>
+  <br>
   <label for="description">Description:</label><br>
   <textarea id="description" name="description"></textarea><br>
   <br>

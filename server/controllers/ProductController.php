@@ -310,6 +310,26 @@ class ProductController
         // require 'views/products/checkout.php';
         require 'views/checkout/checkout.php';
     }
+    public function categories()
+    {
+        //select product by category id from products table
+        $stmt = $this->conn->prepare('SELECT * FROM products WHERE category_id = ?');
+        $stmt->execute([6]);
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        //select category name from categories table
+        $stmt = $this->conn->prepare('SELECT * FROM categories WHERE id = ?');
+        $stmt->execute([6]);
+        $categories = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // echo json_encode($products);
+        // echo "<br><br>";
+        // echo json_encode($category);
+        
+
+
+        require 'views/products/categories.php';
+    }
 
 
 
@@ -333,19 +353,29 @@ class ProductController
             $image = $_FILES['image']['name'];
             // image file directory 
             $target = "controllers/uploads/" . basename($image);
+            $category_id = $_POST['category_id'];
 
 
             if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
                 echo "Image uploaded successfully";
-                $stmt = $this->conn->prepare('INSERT INTO products (prod_name, prod_price, prod_description, prod_image) 
-                VALUES (?, ?, ?, ?)');
-                $stmt->execute([$_POST['name'], $_POST['price'], $_POST['description'], $image]);
+                $stmt = $this->conn->prepare('INSERT INTO products (prod_name, prod_price, prod_description, prod_image, category_id)  VALUES (?, ?, ?, ?, ?)');
+                $stmt->execute([$_POST['name'], $_POST['price'], $_POST['description'], $image, $category_id]);
             } else {
                 echo "Failed to upload image";
             }
         } else {
             echo "Image not set";
         }
+       
+   
+
+        
+
+
+        //insert category id into product table from payrent_id and category
+
+        // $stmt->execute([$_POST['category_name'], $_POST['parent_id']]);
+
 
         // header('Location: /products/index');
 

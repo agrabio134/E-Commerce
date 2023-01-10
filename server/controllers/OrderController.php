@@ -39,13 +39,21 @@ class OrderController
                 break;
         }
         //when shipping is COD payment method should be in cash by default
-        
+
 
 
         // Get the total price of the order from the form submission
         $total_price = $_POST['total_price'];
         echo $total_price;
         $customer = $_POST['customer_address'];
+        echo "<br>";
+        echo $customer;
+        echo "<br>";
+
+        $payment_method = $_POST['pay_method'];
+        echo $payment_method;
+
+        echo  $shipping_option ;
 
         // Calculate the final price of the order (including shipping)
         $final_price = $total_price + $shipping_price;
@@ -82,10 +90,22 @@ class OrderController
         $stmt = $this->conn->prepare('DELETE FROM cart WHERE customers_id = ?');
         $stmt->execute([$customer_id]);
 
+       
+
+        //insert payment to the database  payment table,customer_id, payment_amount, payment_method and transaction_id
+
+
         // Redirect the user to the order confirmation page
         if ($shipping_option == 'COD') {
+            $stmt = $this->conn->prepare('INSERT INTO payments (customer_id, payment_amount, payment_method, transaction_id) VALUES (?, ?, ?, ?)');
+            $stmt->execute([$customer_id, $final_price, $payment_method, $unique_id]);
+
+
             header('Location: /orders/confirmation/');
         } else {
+            $stmt = $this->conn->prepare('INSERT INTO payments (customer_id, payment_amount, payment_method, transaction_id) VALUES (?, ?, ?, ?)');
+            $stmt->execute([$customer_id, $final_price, $payment_method, $unique_id]);
+
             header('Location: /orders/payment');
         }
     }
@@ -121,36 +141,25 @@ class OrderController
             ],
         ]);
 
+        //get payment method details from checkout.php
+
+
+
+
+
+
+
+
+
         echo $response->getBody();
         // I want to get checkout url from response body and redirect to it 
         $response = json_decode($response->getBody(), true);
         $checkout_url = $response['data']['attributes']['redirect']['checkout_url'];
 
         header('Location: ' . $checkout_url);
-
-       
-
     }
-    
 
 
-    // public function get_payment()
-    // {
-    //     require_once('../vendor/autoload.php');
-
-    //     $client = new \GuzzleHttp\Client();
-
-    //     $response = $client->request('POST', 'https://api.paymongo.com/v1/webhooks', [
-    //         'body' => '{"data":{"attributes":{"events":["source.chargeable"],"url":"https://cnfragrance.000webhostapp.com/"}}}',
-    //         'headers' => [
-    //             'accept' => 'application/json',
-    //             'authorization' => 'Basic c2tfdGVzdF8yR2lRQzlKVEdrNDZwWXFNNW5Hc0xDSmI6',
-    //             'content-type' => 'application/json',
-    //         ],
-    //     ]);
-
-    //     echo $response->getBody();
-    // }
 
     public function confirmation()
     {
@@ -189,6 +198,13 @@ class OrderController
         $stmt = $this->conn->prepare('SELECT * FROM customers WHERE id = ?');
         $stmt->execute([$customer_id]);
         $customer = $stmt->fetch(PDO::FETCH_ASSOC);
+
+         // get payment method information
+         $stmt = $this->conn->prepare('SELECT * FROM payments WHERE customer_id = ? ORDER BY id DESC LIMIT 1');
+         $stmt->execute([$customer_id]);
+         $payments = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //  echo $payments['payment_method'];
 
 
         // Render the order confirmation view

@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+
+
 <h1>Checkout</h1>
 <?php
 //get customers from session
@@ -46,15 +52,13 @@ echo '<div class="alert alert-success" role="alert">Customer Address: ' . $custo
     <option value="express">Express (Php 50.00)</option>
     <option value="COD">Cash on Delivery (Php 60.00)</option>
   </select>
-  
   <br />
   <!-- payment method -->
-  
-  
-  <label for="payment_method">Payment Method:</label>
-  <select name="payment_method" id="payment_method"  >
-    <option value="gcash">GCASH</option>
-    <option value="cash">CASH</option>
+  <label for="pay_method">Payment Method: </label>
+  <select name="pay_method" id="pay_method">
+    <option value="GCASH">GCASH</option>
+    <option value="CASH">CASH </option>
+  </select>
 
 
   <br />
@@ -68,17 +72,19 @@ echo '<div class="alert alert-success" role="alert">Customer Address: ' . $custo
   ">
 </form>
 
+</body>
+
   <!-- when shipping option is COD, payment method should be in cash by default use javascript-->
   <script>
     const shippingOption = document.getElementById('shipping_option');
-    const paymentMethod = document.getElementById('payment_method');
+    const paymentMethod = document.getElementById('pay_method');
     shippingOption.addEventListener('change', (event) => {
       if (event.target.value === 'COD') {
-        paymentMethod.value = 'cash';
-        paymentMethod.disabled="true";
+        paymentMethod.value = 'CASH';
+        paymentMethod.disabled="";
 
       } else {
-        paymentMethod.value = 'gcash';
+        paymentMethod.value = 'GCASH';
         paymentMethod.disabled="";
 
       }

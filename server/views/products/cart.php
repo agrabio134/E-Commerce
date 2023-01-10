@@ -12,7 +12,7 @@
 
     <tr>
       <td><?php echo $product['prod_name']; ?></td>
-      <td>Php <?php echo $product['prod_price']; ?></td>
+      <td>&#8369; <?php echo $product['prod_price']; ?></td>
       <td>
         <form action="/products/update_cart" method="POST" data-price="<?php echo $product['prod_price']; ?>">
           <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
@@ -20,12 +20,12 @@
           <button type="submit">Update</button>
         </form>
       </td>
-      <td>Php <?php echo $product['prod_price'] * $product['quantity']; ?></td>
+      <td>&#8369; <?php echo $product['prod_price'] * $product['quantity']; ?></td>
     </tr>
     <?php endif; ?>
 
   <?php endforeach; ?>
   
 </table>
-<p>Total: Php <?php echo $total; ?></p>
+<p>Total: &#8369; <?php echo $total; ?></p>
 <a href="/products/checkout">Checkout</a>
