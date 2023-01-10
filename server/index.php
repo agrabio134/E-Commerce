@@ -6,6 +6,7 @@ require_once 'config/database.php';
 //CustomerController file
 require_once 'controllers/CustomerController.php';
 require_once 'controllers/ProductController.php';
+require_once 'controllers/OrderController.php';
 
 require_once 'Router/Router.php';
 
@@ -19,46 +20,55 @@ $action = "index";
 $id = 1;
 
 // Check the request URI and set the controller and action
+
+
 if ($uri[1] == "products") {
   $controller = "ProductController";
-  $action = $uri[2];
+  // set default $uri[2] to index
+  if (empty($uri[2])) {
+    $action = "index";
+  } else {
+    $action = $uri[2];
+  }
 } elseif ($uri[1] == "customers") {
   $controller = "CustomerController";
-  $action = $uri[2];
-}
-//  elseif ($uri[1] == "cart") {
-//   $controller = "ProductController";
-//   $action = $uri[2];
-// }
+  if (empty($uri[2])) {
+    $action = "index";
+  } else {
+    $action = $uri[2];
+  }
+} elseif ($uri[1] == "orders") {
+  $controller = "OrderController";
+  if (empty($uri[2])) {
+    $action = "index";
+  } else {
+    $action = $uri[2];
+  }
+} 
 
 
 
-// $router = new Router();
+
+// instantiate the controller and call the action
 $productController = new ProductController();
+$customerController = new CustomerController();
+$orderController = new OrderController();
 
-// $router = new Router;
+
 
 $router->post('/products/cart', function() use ($productController) {
   $productController->addToCart();
 });
 
-// $router->post('/products/update-cart', function() use ($productController) {
-//   $productController->updateCart();
-// });
-
-
-// $router->post('/products/update-quantity', function() use ($productController) {
-//   $productController->updateQuantity();
-// });
-
 $router->get('/checkout', function() {
   require __DIR__ . '/../views/checkout.php';
 });
 
+//order controller
+$router->post('/orders/payment', function() use ($orderController) {
+  $orderController->payment();
+});
 
-// $router->post('/update-total-price', function() use ($productController) {
-//   $productController->updateTotalPrice();
-// });
 
 
 
@@ -69,7 +79,6 @@ $router->get('/checkout', function() {
 if (file_exists('controllers/' . $controller . '.php')) {
   require_once 'controllers/' . $controller . '.php';
 
-  $customerController = new CustomerController();
   if ($action == 'show') {
     $customerController->show($id);
   }

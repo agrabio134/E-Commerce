@@ -131,11 +131,13 @@ class ProductController
             exit;
         }
 
+
         echo 'Welcome ' . $_SESSION['customer_name'];
 
         $products = [];
-        $total = 0;
         $customer_id = $_SESSION['id'];
+        $total = 0;
+
 
 
         if (!isset($_SESSION['cart'])) {
@@ -144,6 +146,10 @@ class ProductController
 
 
         foreach ($_SESSION['cart'] as $id => $quantity) {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+
             $stmt = $this->conn->prepare('SELECT * FROM products WHERE id = ?');
             $stmt->execute([$id]);
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -169,8 +175,9 @@ class ProductController
             foreach ($cart as $product) {
                 $productPrices[] = $product['quantity'] * $product['prod_price'];
             }
-
             $total = array_sum($productPrices);
+            // echo $productPrices;
+
         }
 
 

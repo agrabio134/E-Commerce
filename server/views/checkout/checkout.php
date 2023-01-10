@@ -14,30 +14,31 @@ echo '<div class="alert alert-success" role="alert">Customer Address: ' . $custo
 
 <br>
 
+<form action="/orders/confirm" method="POST">
 
-<table>
-  <tr>
-    <th>Product</th>
-    <th>Price</th>
-    <th>Quantity</th>
-    <th>Total</th>
-  </tr>
-  <?php foreach ($cart as $product) : ?>
-    <?php if ($product['quantity'] > 0): ?>
+  <table>
     <tr>
-      <td><?php echo $product['prod_name']; ?></td>
-      <td>Php <?php echo $product['prod_price']; ?></td>
-      <td><?php echo $product['quantity']; ?></td>
-      <td>Php <?php echo $product['prod_price'] * $product['quantity']; ?></td>
+      <th>Product</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Total</th>
     </tr>
-    <?php endif; ?>
-  <?php endforeach; ?>
-</table>
+    <?php foreach ($cart as $product) : ?>
+      <?php if ($product['quantity'] > 0) : ?>
+        <tr>
+          <td><?php echo $product['prod_name']; ?></td>
+          <td>Php <?php echo $product['prod_price']; ?></td>
+          <td><?php echo $product['quantity']; ?></td>
+          <td>Php <?php echo $product['prod_price'] * $product['quantity']; ?></td>
+        </tr>
+      <?php endif; ?>
+    <?php endforeach; ?>
+  </table>
 
-<p>Total: Php <?php echo $total; ?></p>
+  <p>Total: Php <?php echo $total; ?></p>
 
-<form action="/order/confirm" method="POST">
   <input type="hidden" name="total_price" value="<?php echo $total; ?>">
+  <input type="hidden" name="customer_address" value="<?php echo $customer['customer_address']; ?>">
 
   <label for="shipping_option">Shipping Option:</label>
   <select name="shipping_option" id="shipping_option">
@@ -45,9 +46,19 @@ echo '<div class="alert alert-success" role="alert">Customer Address: ' . $custo
     <option value="express">Express (Php 50.00)</option>
     <option value="COD">Cash on Delivery (Php 60.00)</option>
   </select>
-  <br/>
+  
+  <br />
+  <!-- payment method -->
+  
+  
+  <label for="payment_method">Payment Method:</label>
+  <select name="payment_method" id="payment_method"  >
+    <option value="gcash">GCASH</option>
+    <option value="cash">CASH</option>
 
-  <input type="submit" value="Confirm" onclick="
+
+  <br />
+  <input type="submit" value="Checkout" onclick="
   if (confirm(`Are you sure you want to Confirm Checkout?`)) {
     alert(`Checkout Confirmed!`);
   } else {
@@ -56,3 +67,20 @@ echo '<div class="alert alert-success" role="alert">Customer Address: ' . $custo
     }
   ">
 </form>
+
+  <!-- when shipping option is COD, payment method should be in cash by default use javascript-->
+  <script>
+    const shippingOption = document.getElementById('shipping_option');
+    const paymentMethod = document.getElementById('payment_method');
+    shippingOption.addEventListener('change', (event) => {
+      if (event.target.value === 'COD') {
+        paymentMethod.value = 'cash';
+        paymentMethod.disabled="true";
+
+      } else {
+        paymentMethod.value = 'gcash';
+        paymentMethod.disabled="";
+
+      }
+    });
+  </script>
