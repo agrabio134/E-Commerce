@@ -16,6 +16,8 @@
 
 
 
+
+
 <h1><?php echo $customer['customer_name']; ?></h1>
 <p>Email: <?php echo $customer['customer_email']; ?></p>
 

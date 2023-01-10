@@ -1,5 +1,19 @@
 <!-- views/products/show.php -->
 
+
+<?php 
+session_start();
+if (!isset($_SESSION['id'])){
+    echo '<script>alert("Please login first!")</script>';
+    echo '<script>window.location.href = "/customers/login"</script>';
+    // header('Location: /customers/login');
+} else { 
+  echo $_SESSION['customer_name'];
+} 
+
+
+?>
+
 <h1><?php echo $product['prod_name']; ?></h1>
 
 <img src="../../controllers/uploads/<?php echo $product['prod_image']; ?>" alt="<?php echo $product['prod_image']; ?>">

@@ -122,7 +122,14 @@ class OrderController
         ]);
 
         echo $response->getBody();
-        header('Location: https://test-sources.paymongo.com/sources?id=src_Z6h1nTia84AhYZp7ATMngbSW');
+        // I want to get checkout url from response body and redirect to it 
+        $response = json_decode($response->getBody(), true);
+        $checkout_url = $response['data']['attributes']['redirect']['checkout_url'];
+
+        header('Location: ' . $checkout_url);
+
+       
+
     }
     
 

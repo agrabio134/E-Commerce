@@ -85,10 +85,6 @@ class ProductController
             $stmt = $this->conn->prepare('UPDATE cart SET quantity = ? WHERE customers_id = ? AND product_id = ?');
             $stmt->execute([$quantity, $customer_id, $product_id]);
         }
-
-
-     
-
     }
 
     public function update_cart()
@@ -108,7 +104,7 @@ class ProductController
             $stmt->execute([$qty, $customer_id, $product_id]);
 
 
-            header('Location: /products/cart');
+            header('Location: /products/viewcart');
         } else {
             header('Location: /customers/login');
         }
@@ -196,7 +192,82 @@ class ProductController
 
 
         // Render the cart view
+        header('Location: /products/index');
+    }
+    public function viewCart()
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['id'])) {
+            header('Location: /customers/login');
+            exit;
+        }
+
+
+        echo 'Welcome ' . $_SESSION['customer_name'];
+
+        $products = [];
+        $customer_id = $_SESSION['id'];
+        $total = 0;
+
+
+
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+
+
+        foreach ($_SESSION['cart'] as $id => $quantity) {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+
+            $stmt = $this->conn->prepare('SELECT * FROM products WHERE id = ?');
+            $stmt->execute([$id]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $product['quantity'] = $quantity;
+
+
+            $products[] = $product;
+            // echo  $quantity;
+
+            $productPrices = array();
+
+            //select data from table cart and table product to get the total price
+            $stmt = $this->conn->prepare(
+                'SELECT c.id, c.customers_id, c.product_id, c.quantity, p.prod_name, p.prod_price
+             FROM cart c
+             INNER JOIN products p ON c.product_id = p.id
+             WHERE c.customers_id = ?'
+            );
+            $stmt->execute([$customer_id]);
+            $cart = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($cart as $product) {
+                $productPrices[] = $product['quantity'] * $product['prod_price'];
+            }
+            $total = array_sum($productPrices);
+            // echo $productPrices;
+
+        }
+
+
+
+        $stmt = $this->conn->prepare(
+            'SELECT c.id, c.customers_id, c.product_id, c.quantity, p.prod_name, p.prod_price
+             FROM cart c
+             INNER JOIN products p ON c.product_id = p.id
+             WHERE c.customers_id = ?'
+        );
+        $stmt->execute([$customer_id]);
+        $cart = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute([$customer_id]);
+        // $cart = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         require 'views/products/cart.php';
+
     }
     public function checkout()
     {
@@ -232,7 +303,7 @@ class ProductController
         }
         $total = array_sum($productPrices);
 
-      
+
 
         // Render the checkout view
 
