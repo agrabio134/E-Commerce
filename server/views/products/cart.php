@@ -1,3 +1,9 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="../../public/css/products/cart.css">
+</head>
+
+
+
 <h1>Cart</h1>
 
 <table>

@@ -1,0 +1,60 @@
+h1 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+form {
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 50px;
+    text-align: center;
+}
+
+label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+input[type="number"] {
+    width: 50px;
+}
+
+input[type="submit"] {
+    width: 150px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+
+.prod_img{
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 300px;
+    height: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    text-align: center;
+    
+  
+
+}
+img{
+    width: 200px;
+    height: 200px;
+
+}

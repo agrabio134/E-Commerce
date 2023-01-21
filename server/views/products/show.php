@@ -1,5 +1,9 @@
 <!-- views/products/show.php -->
 
+<head>
+    <link rel="stylesheet" type="text/css" href="../../public/css/products/prod-details.css">
+</head>
+
 
 <?php 
 session_start();
@@ -16,8 +20,9 @@ if (!isset($_SESSION['id'])){
 
 <h1><?php echo $product['prod_name']; ?></h1>
 
+<div class="prod_img">
 <img src="../../controllers/uploads/<?php echo $product['prod_image']; ?>" alt="<?php echo $product['prod_image']; ?>">
-
+</div>
 <p>&#8369; <?php echo $product['prod_price']; ?></p>
 
 <p><?php echo $product['prod_description']; ?></p>

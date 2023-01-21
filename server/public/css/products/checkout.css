@@ -1,0 +1,72 @@
+h1 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+form {
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 50px;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 50px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+p {
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+select {
+    width: 150px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    width: 150px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.alert {
+    margin: 20px 0;
+    text-align: center;
+}

@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="../../public/css/products/checkout.css">
+</head>
+
 
 <body>
 

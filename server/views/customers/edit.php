@@ -1,4 +1,9 @@
 <!-- Edit customer form -->
+
+<head>
+    <link rel="stylesheet" type="text/css" href="../../public/css/customers/edit-profile.css">
+</head>
+
 <form action="/customers/update" method="post">
   <input type="hidden" name="customer_id" value="<?php echo $customer['id']; ?>">
   <label for="customer_name">Name:</label><br>
